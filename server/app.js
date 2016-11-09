@@ -3,6 +3,18 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
+var validator = require('./modules/validate');
+var duplicateChecker = validator.duplicateChecker;
+var emptyChecker = validator.emptyChecker;
+var newSong;
+var todaysDate = new Date;
+
+
+/**********************
+Functions to check for
+duplicates or blank
+fields
+***********************/
 
 // puts post request body data and store it on req.body
 app.use(bodyParser.urlencoded({extended: true}));
@@ -13,20 +25,27 @@ app.set('port', process.env.PORT || 3000);
 var songs = [
   {
     artist: "Bruce Springstein",
-    title: "Born in the U.S.A."
+    title: "Born in the U.S.A.",
+    dateAdded: todaysDate.toUTCString()
   }
 ];
 
 // Routes
 app.post('/songs', function(req, res) {
   // req.body is supplied by bodyParser above
-  console.log("REQ body: ", req.body);
-  var newSong = req.body;
-  songs.push(newSong);
-
-  // created new resource
-  res.sendStatus(201);
+  newSong = req.body;
+  if(duplicateChecker(songs, newSong) || emptyChecker(newSong)) {
+    res.sendStatus(400);
+  } else {
+    var date = new Date;
+    newSong.dateAdded = date.toUTCString();
+    songs.push(newSong);
+    res.sendStatus(201);
+  }
 });
+
+
+
 
 app.get('/songs', function(req, res) {
   console.log('handling get request for songs');

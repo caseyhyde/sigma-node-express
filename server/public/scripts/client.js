@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  console.log("it's alive!");
+  // console.log("it's alive!");
 
   $("#postSongForm").on("submit", function(event) {
     event.preventDefault();
@@ -9,7 +9,7 @@ $(document).ready(function() {
       newSong[field.name] = field.value;
     });
 
-    console.log(newSong);
+    // console.log(newSong);
 
     // send song object to the Server
     $.ajax({
@@ -20,8 +20,12 @@ $(document).ready(function() {
         console.log(response);
         if(response == "Created") {
           getSongs();
-        } else {
-          alert("Oh no! Your song didn't save correctly.");
+        }
+      },
+      error: function(response) {
+        console.log(response);
+        if(response.status = 400) {
+          alert("You need to both fill out all fields, and enter a new song");
         }
       }
     })
@@ -36,6 +40,7 @@ $(document).ready(function() {
       url: '/songs',
       success: function(songData) {
         songsToDom(songData);
+        $("input").val("");
       }
     });
   }
@@ -48,6 +53,7 @@ $(document).ready(function() {
       var $el = $("#songContainer").children().last();
       $el.append('<h3>' + songs[i].title + '</h3>');
       $el.append('<p>By: ' + songs[i].artist + '</p>');
+      $el.append('<p>Date added: ' + songs[i].dateAdded + '</p>');
     }
 
   }
