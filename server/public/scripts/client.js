@@ -24,13 +24,18 @@ $(document).ready(function() {
       },
       error: function(response) {
         console.log(response);
-        if(response.status = 400) {
+        console.log(response.status);
+        if(response.status == 400) {
           alert("You need to both fill out all fields, and enter a new song");
+        } else if(response.status == 0) {
+          alert("You are not connected to the server!");
+        } else {
+          alert("Uknown error!");
         }
       }
-    })
+    });
 
-  })
+  });
 
   getSongs();
 
