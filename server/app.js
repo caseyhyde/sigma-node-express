@@ -7,7 +7,7 @@ var validator = require('./modules/validate');
 var duplicateChecker = validator.duplicateChecker;
 var emptyChecker = validator.emptyChecker;
 var newSong;
-var todaysDate = new Date;
+var todaysDate = new Date();
 
 
 /**********************
@@ -26,7 +26,7 @@ var songs = [
   {
     artist: "Bruce Springstein",
     title: "Born in the U.S.A.",
-    dateAdded: todaysDate.toUTCString()
+    dateAdded: todaysDate.toLocaleString()
   }
 ];
 
@@ -38,7 +38,7 @@ app.post('/songs', function(req, res) {
     res.sendStatus(400);
   } else {
     var date = new Date;
-    newSong.dateAdded = date.toUTCString();
+    newSong.dateAdded = date.toLocaleString();
     songs.push(newSong);
     res.sendStatus(201);
   }
